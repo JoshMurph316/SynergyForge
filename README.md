@@ -1,4 +1,5 @@
 # SynergyForge
+*Data-driven team building for strategy gamers.*
 
 **SynergyForge** is a tactical team analysis tool designed for strategy games like *Marvel Strike Force*.  
 It calculates **team synergy scores**, visualizes **turn order speed tuning**, and maps **counter strategies** — making it an invaluable tool for both casual players and competitive strategists.
