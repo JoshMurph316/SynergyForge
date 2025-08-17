@@ -8,7 +8,12 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "npm run build && firebase deploy",
+    "pipeline": "python data-pipeline/main.py || py data-pipeline/main.py",
+    "pipeline:test": "python data-pipeline/main.py --testing 5 || py data-pipeline/main.py --testing 5",
+
+    "refresh:data": "npm run pipeline && npm run build && firebase deploy"
   },
   "dependencies": {
     "react": "^19.1.1",
