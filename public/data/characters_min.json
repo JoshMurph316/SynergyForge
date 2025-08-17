@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Azazel",
+    "path": "Azazel",
+    "url": "https://marvelstrikeforce.com/en/characters/Azazel",
+    "imageUrl": "https://assets.marvelstrikeforce.com/imgs/Portrait_Azazel_c3414ebf.png"
+  },
+  {
+    "name": "Blastaar",
+    "path": "Blastaar",
+    "url": "https://marvelstrikeforce.com/en/characters/Blastaar",
+    "imageUrl": "https://assets.marvelstrikeforce.com/imgs/Portrait_Blastaar_2b823cfe.png"
+  },
+  {
+    "name": "Rachelsummers",
+    "path": "RachelSummers",
+    "url": "https://marvelstrikeforce.com/en/characters/RachelSummers",
+    "imageUrl": "https://assets.marvelstrikeforce.com/imgs/Portrait_RachelSummers_593f2e8d.png"
+  },
+  {
+    "name": "Sebastianshaw",
+    "path": "SebastianShaw",
+    "url": "https://marvelstrikeforce.com/en/characters/SebastianShaw",
+    "imageUrl": "https://assets.marvelstrikeforce.com/imgs/Portrait_SebastianShaw_4709caef.png"
+  },
+  {
+    "name": "Emmafrost",
+    "path": "EmmaFrost",
+    "url": "https://marvelstrikeforce.com/en/characters/EmmaFrost",
+    "imageUrl": "https://assets.marvelstrikeforce.com/imgs/Portrait_EmmaFrost_0d4c0489.png"
+  }
+]

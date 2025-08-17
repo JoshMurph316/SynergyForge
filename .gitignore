@@ -27,3 +27,8 @@ dist
 .env
 .env.local
 .vscode
+# Python pipeline
+data-pipeline/.venv/
+data-pipeline/output/
+data-pipeline/__pycache__/
+data-pipeline/keys/   

@@ -1,0 +1,5 @@
+
+selenium
+webdriver-manager
+firebase-admin
+google-cloud-firestore
