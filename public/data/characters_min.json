@@ -1,32 +1,152 @@
 [
   {
-    "name": "Azazel",
+    "name": "Azazel | MARVEL Strike Force | Scopely",
     "path": "Azazel",
     "url": "https://marvelstrikeforce.com/en/characters/Azazel",
-    "imageUrl": "https://assets.marvelstrikeforce.com/imgs/Portrait_Azazel_c3414ebf.png"
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
   },
   {
-    "name": "Blastaar",
+    "name": "Blastaar | MARVEL Strike Force | Scopely",
     "path": "Blastaar",
     "url": "https://marvelstrikeforce.com/en/characters/Blastaar",
-    "imageUrl": "https://assets.marvelstrikeforce.com/imgs/Portrait_Blastaar_2b823cfe.png"
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
   },
   {
-    "name": "Rachelsummers",
+    "name": "Rachel Summers | MARVEL Strike Force | Scopely",
     "path": "RachelSummers",
     "url": "https://marvelstrikeforce.com/en/characters/RachelSummers",
-    "imageUrl": "https://assets.marvelstrikeforce.com/imgs/Portrait_RachelSummers_593f2e8d.png"
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
   },
   {
-    "name": "Sebastianshaw",
+    "name": "Sebastian Shaw | MARVEL Strike Force | Scopely",
     "path": "SebastianShaw",
     "url": "https://marvelstrikeforce.com/en/characters/SebastianShaw",
-    "imageUrl": "https://assets.marvelstrikeforce.com/imgs/Portrait_SebastianShaw_4709caef.png"
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
   },
   {
-    "name": "Emmafrost",
+    "name": "Emma Frost | MARVEL Strike Force | Scopely",
     "path": "EmmaFrost",
     "url": "https://marvelstrikeforce.com/en/characters/EmmaFrost",
-    "imageUrl": "https://assets.marvelstrikeforce.com/imgs/Portrait_EmmaFrost_0d4c0489.png"
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
+  },
+  {
+    "name": "Madelyne Pryor | MARVEL Strike Force | Scopely",
+    "path": "MadelynePryor",
+    "url": "https://marvelstrikeforce.com/en/characters/MadelynePryor",
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
+  },
+  {
+    "name": "A.I.M. Assaulter | MARVEL Strike Force | Scopely",
+    "path": "AimDmg_Speed",
+    "url": "https://marvelstrikeforce.com/en/characters/AimDmg_Speed",
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
+  },
+  {
+    "name": "A.I.M. Infector | MARVEL Strike Force | Scopely",
+    "path": "AimControl_Infect",
+    "url": "https://marvelstrikeforce.com/en/characters/AimControl_Infect",
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
+  },
+  {
+    "name": "A.I.M. Monstrosity | MARVEL Strike Force | Scopely",
+    "path": "AimDmg_Offense",
+    "url": "https://marvelstrikeforce.com/en/characters/AimDmg_Offense",
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
+  },
+  {
+    "name": "A.I.M. Researcher | MARVEL Strike Force | Scopely",
+    "path": "AimSupport_Heal",
+    "url": "https://marvelstrikeforce.com/en/characters/AimSupport_Heal",
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
+  },
+  {
+    "name": "A.I.M. Security | MARVEL Strike Force | Scopely",
+    "path": "AimTank_Taunt",
+    "url": "https://marvelstrikeforce.com/en/characters/AimTank_Taunt",
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
+  },
+  {
+    "name": "Abomination | MARVEL Strike Force | Scopely",
+    "path": "Abomination",
+    "url": "https://marvelstrikeforce.com/en/characters/Abomination",
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
+  },
+  {
+    "name": "Absorbing Man | MARVEL Strike Force | Scopely",
+    "path": "AbsorbingMan",
+    "url": "https://marvelstrikeforce.com/en/characters/AbsorbingMan",
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
+  },
+  {
+    "name": "Adam Warlock | MARVEL Strike Force | Scopely",
+    "path": "AdamWarlock",
+    "url": "https://marvelstrikeforce.com/en/characters/AdamWarlock",
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
+  },
+  {
+    "name": "Agatha Harkness | MARVEL Strike Force | Scopely",
+    "path": "AgathaHarkness",
+    "url": "https://marvelstrikeforce.com/en/characters/AgathaHarkness",
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
+  },
+  {
+    "name": "Agent Coulson | MARVEL Strike Force | Scopely",
+    "path": "Coulson",
+    "url": "https://marvelstrikeforce.com/en/characters/Coulson",
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
+  },
+  {
+    "name": "Agent Venom | MARVEL Strike Force | Scopely",
+    "path": "AgentVenom",
+    "url": "https://marvelstrikeforce.com/en/characters/AgentVenom",
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
+  },
+  {
+    "name": "America Chavez | MARVEL Strike Force | Scopely",
+    "path": "AmericaChavez",
+    "url": "https://marvelstrikeforce.com/en/characters/AmericaChavez",
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
+  },
+  {
+    "name": "Ancient One | MARVEL Strike Force | Scopely",
+    "path": "AncientOne",
+    "url": "https://marvelstrikeforce.com/en/characters/AncientOne",
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
+  },
+  {
+    "name": "Ant-Man | MARVEL Strike Force | Scopely",
+    "path": "AntMan",
+    "url": "https://marvelstrikeforce.com/en/characters/AntMan",
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
+  },
+  {
+    "name": "Anti-Venom | MARVEL Strike Force | Scopely",
+    "path": "AntiVenom",
+    "url": "https://marvelstrikeforce.com/en/characters/AntiVenom",
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
+  },
+  {
+    "name": "Apocalypse | MARVEL Strike Force | Scopely",
+    "path": "Apocalypse",
+    "url": "https://marvelstrikeforce.com/en/characters/Apocalypse",
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
+  },
+  {
+    "name": "Archangel | MARVEL Strike Force | Scopely",
+    "path": "Archangel",
+    "url": "https://marvelstrikeforce.com/en/characters/Archangel",
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
+  },
+  {
+    "name": "Ares | MARVEL Strike Force | Scopely",
+    "path": "Ares",
+    "url": "https://marvelstrikeforce.com/en/characters/Ares",
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
+  },
+  {
+    "name": "Baron Zemo | MARVEL Strike Force | Scopely",
+    "path": "Zemo",
+    "url": "https://marvelstrikeforce.com/en/characters/Zemo",
+    "imageUrl": "https://assets.marvelstrikeforce.com/www/img/share/msf-share-en.jpg"
   }
 ]
