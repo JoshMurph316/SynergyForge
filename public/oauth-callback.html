@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>SynergyForge OAuth Callback</title>
+</head>
+<body>
+  <div id="msg">Completing sign-in…</div>
+  <script>
+    (async () => {
+      const qs = new URLSearchParams(location.search);
+      const code = qs.get("code");
+      const state = qs.get("state");
+      const okState = state && state === sessionStorage.getItem("msf_state");
+      const code_verifier = sessionStorage.getItem("msf_verifier");
+      const redirect_uri = sessionStorage.getItem("msf_redirect") || `${location.origin}/oauth/callback`;
+
+      const el = document.getElementById("msg");
+      if (!code || !okState || !code_verifier) {
+        el.textContent = "Sign-in failed (invalid state or missing code).";
+        return;
+      }
+      try {
+        const r = await fetch("/api/oauthExchange", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ code, code_verifier, redirect_uri })
+        });
+        if (!r.ok) {
+          el.textContent = "Token exchange failed.";
+          return;
+        }
+        // Clean up PKCE data
+        sessionStorage.removeItem("msf_state");
+        sessionStorage.removeItem("msf_verifier");
+        sessionStorage.removeItem("msf_redirect");
+        el.textContent = "Signed in! You can close this tab or go back to the app.";
+      } catch {
+        el.textContent = "Exchange error.";
+      }
+    })();
+  </script>
+</body>
+</html>
