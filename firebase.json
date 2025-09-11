@@ -1,20 +1,27 @@
 {
   "firestore": { "rules": "firestore.rules", "indexes": "firestore.indexes.json" },
-  "hosting": { "public": "dist", "rewrites":[{"source":"**","destination":"/index.html"}]
+  "hosting": {
+    "public": "dist",
+    "rewrites": [
+      { "source": "/api/oauthExchange", "function": "oauthExchange" },
+      { "source": "/api/oauthRefresh",  "function": "oauthRefresh"  },
+      { "source": "/api/**",            "function": "msfProxy"      },
+      { "source": "/oauth/callback",    "destination": "/oauth-callback.html" },
+      { "source": "**",                 "destination": "/index.html" }
+    ]
   },
   "emulators": {
-    "auth": {
-      "port": 9099
-    },
-    "firestore": {
-      "port": 8080
-    },
-    "hosting": {
-      "port": 5000
-    },
-    "ui": {
-      "enabled": true
-    },
+    "auth": { "port": 9099 },
+    "firestore": { "port": 8080 },
+    "hosting": { "port": 5000 },
+    "ui": { "enabled": true },
     "singleProjectMode": true
-  }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": ["node_modules",".git","firebase-debug.log","firebase-debug.*.log","*.local"]
+    }
+  ]
 }
