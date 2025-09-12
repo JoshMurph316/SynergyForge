@@ -1,6 +1,45 @@
 {
-  "firestore": { "rules": "firestore.rules", "indexes": "firestore.indexes.json" },
-  "hosting": { "public": "dist", "rewrites":[{"source":"**","destination":"/index.html"}]
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "hosting": {
+    "public": "dist",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/api/msf",
+        "function": {
+          "functionId": "msfProxy",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/oauth/client",
+        "function": {
+          "functionId": "oauthClientCreds",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/whoami",
+        "function": {
+          "functionId": "whoami",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/sync",
+        "function": {
+          "functionId": "syncGameRef",
+          "region": "us-central1"
+        }
+      }
+    ]
   },
   "emulators": {
     "auth": {
@@ -16,5 +55,21 @@
       "enabled": true
     },
     "singleProjectMode": true
-  }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run build"
+      ]
+    }
+  ]
 }

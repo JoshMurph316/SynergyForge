@@ -24,6 +24,7 @@ dist-ssr
 *.sw?
 node_modules
 dist
+functions/.env
 .env
 .env.local
 .vscode
