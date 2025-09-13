@@ -3,20 +3,20 @@ import { collection, addDoc, getDocs, serverTimestamp } from "firebase/firestore
 import { db } from "./services/firebase";
 
 export default function Playground() {
-  const [log, setLog] = useState([]);
+  const [log, setLog] = useState<string[]>([]);
 
   const write = async () => {
     const ref = await addDoc(collection(db, "smoke_test"), {
       createdAt: serverTimestamp(),
-      note: "Hello from SynergyForge ✨",
+      note: "Hello from SynergyForge",
     });
-    setLog(l => [`Wrote doc ${ref.id}`, ...l]);
+    setLog((l) => [`Wrote doc ${ref.id}`, ...l]);
   };
 
   const read = async () => {
     const snap = await getDocs(collection(db, "smoke_test"));
-    setLog(l => [
-      `Read ${snap.size} docs: ${snap.docs.map(d => d.id).join(", ")}`,
+    setLog((l) => [
+      `Read ${snap.size} docs: ${snap.docs.map((d) => d.id).join(", ")}`,
       ...l,
     ]);
   };
@@ -32,3 +32,4 @@ export default function Playground() {
     </div>
   );
 }
+

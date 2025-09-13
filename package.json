@@ -8,11 +8,12 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
+    "lint:ci": "eslint . -f unix",
+    "typecheck": "tsc --noEmit",
     "preview": "vite preview",
     "deploy": "npm run build && firebase deploy",
     "pipeline": "python data-pipeline/main.py || py data-pipeline/main.py",
     "pipeline:test": "python data-pipeline/main.py --testing 5 || py data-pipeline/main.py --testing 5",
-
     "refresh:data": "npm run pipeline && npm run build && firebase deploy"
   },
   "dependencies": {
@@ -21,13 +22,19 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
-    "@types/react": "^19.1.10",
-    "@types/react-dom": "^19.1.7",
+    "@typescript-eslint/eslint-plugin": "^8.10.0",
+    "@typescript-eslint/parser": "^8.10.0",
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.0",
     "eslint": "^9.33.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
+    "typescript": "^5.9.2",
     "vite": "^7.1.2"
+  },
+  "engines": {
+    "node": "22"
   }
 }

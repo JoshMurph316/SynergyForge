@@ -1,6 +1,7 @@
 import { onRequest } from "firebase-functions/v2/https";
 import { defineString } from "firebase-functions/params";
 import * as logger from "firebase-functions/logger";
+import { Buffer } from "node:buffer";
 
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
@@ -36,30 +37,59 @@ async function fetchJSON(path: string, headers: Record<string, string>) {
   return r.json();
 }
 
+let cachedToken: { access_token: string; expiresAt: number } | null = null;
 async function getAppAccessToken(): Promise<{ access_token: string; expires_in: number }> {
-  const body = new URLSearchParams({
-    grant_type: "client_credentials",
-    scope: "openid",
-    client_id: MSF_CLIENT_ID.value(),
-    client_secret: MSF_CLIENT_SECRET.value(),
-  });
-
-  const r = await fetch(MSF_TOKEN_URL.value(), {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body,
-  });
-  if (!r.ok) {
-    const err = await r.text();
-    throw new Error(`Hydra token error ${r.status}: ${err}`);
+  // Serve cached token if still valid (with 60s safety window)
+  if (cachedToken && Date.now() < cachedToken.expiresAt - 60_000) {
+    return { access_token: cachedToken.access_token, expires_in: Math.max(60, Math.floor((cachedToken.expiresAt - Date.now()) / 1000)) };
   }
-  return r.json() as any;
+
+  const useBasic = Boolean(MSF_CLIENT_ID.value() && MSF_CLIENT_SECRET.value());
+  const form = new URLSearchParams({ grant_type: "client_credentials", scope: "openid" });
+  const headers: Record<string, string> = { "Content-Type": "application/x-www-form-urlencoded" };
+  if (useBasic) {
+    const basic = Buffer.from(`${MSF_CLIENT_ID.value()}:${MSF_CLIENT_SECRET.value()}`).toString("base64");
+    headers["Authorization"] = `Basic ${basic}`;
+  } else {
+    // Fallback if Basic is not available; some providers allow this
+    form.set("client_id", MSF_CLIENT_ID.value());
+    form.set("client_secret", MSF_CLIENT_SECRET.value());
+  }
+
+  logger.info("Hydra token request", { url: MSF_TOKEN_URL.value().replace(/https?:\/\//, ""), auth: useBasic ? "basic" : "body" });
+  const r = await fetch(MSF_TOKEN_URL.value(), { method: "POST", headers, body: form });
+  const text = await r.text();
+  if (!r.ok) {
+    logger.error("Hydra token error", { status: r.status, statusText: r.statusText, bodyStartsWith: text.slice(0, 80) });
+    throw new Error(`Hydra token error ${r.status}`);
+  }
+  let json: any;
+  try { json = JSON.parse(text); } catch {
+    logger.error("Hydra token parse error", { textStart: text.slice(0, 120) });
+    throw new Error("Hydra token parse error");
+  }
+  if (!json?.access_token || !json?.expires_in) {
+    logger.error("Hydra token missing fields", { hasAccess: Boolean(json?.access_token), hasExpires: Boolean(json?.expires_in) });
+    throw new Error("Hydra token missing fields");
+  }
+  cachedToken = { access_token: json.access_token, expiresAt: Date.now() + Number(json.expires_in) * 1000 };
+  logger.info("Hydra token success", { expires_in: json.expires_in });
+  return json as { access_token: string; expires_in: number };
 }
 
 // OAuth (Client Credentials) -> sets msf_at cookie
 export const oauthClientCreds = onRequest(async (req, res) => {
   if (req.method !== "POST") { res.status(405).send("POST only"); return; }
   try {
+    // Validate required params early for clearer errors in dev
+    const missing: string[] = [];
+    if (!MSF_CLIENT_ID.value()) missing.push("MSF_CLIENT_ID");
+    if (!MSF_CLIENT_SECRET.value()) missing.push("MSF_CLIENT_SECRET");
+    if (!MSF_TOKEN_URL.value()) missing.push("MSF_TOKEN_URL");
+    if (missing.length) {
+      res.status(400).json({ ok: false, error: `Missing env: ${missing.join(", ")}` });
+      return;
+    }
     const token = await getAppAccessToken();
     const maxAge = Math.max(60, Math.min(token.expires_in ?? 3300, 3600));
     res.setHeader(
@@ -96,9 +126,12 @@ export const msfProxy = onRequest(async (req, res) => {
     });
 
     logger.info("msfProxy forward", {
-      path, status: upstream.status,
+      path,
+      status: upstream.status,
+      statusText: upstream.statusText,
       hasXApiKey: Boolean(MSF_X_API_KEY.value()),
       hasToken: Boolean(token),
+      base: MSF_API_BASE.value().replace(/https?:\/\//, ""),
     });
 
     const body = await upstream.text();
@@ -157,6 +190,22 @@ export const syncGameRef = onRequest({ timeoutSeconds: 180 }, async (_req, res) 
     });
   } catch (e: any) {
     logger.error("syncGameRef error", e);
+    res.status(500).json({ ok: false, error: e.message ?? String(e) });
+  }
+});
+
+// Local-only debug endpoint to test token retrieval without setting cookies
+export const tokenDebug = onRequest(async (_req, res) => {
+  if (!process.env.FUNCTIONS_EMULATOR) { res.status(404).send("Not found"); return; }
+  try {
+    const missing: string[] = [];
+    if (!MSF_CLIENT_ID.value()) missing.push("MSF_CLIENT_ID");
+    if (!MSF_CLIENT_SECRET.value()) missing.push("MSF_CLIENT_SECRET");
+    if (!MSF_TOKEN_URL.value()) missing.push("MSF_TOKEN_URL");
+    if (missing.length) { res.status(400).json({ ok: false, error: `Missing env: ${missing.join(", ")}` }); return; }
+    const tok = await getAppAccessToken();
+    res.json({ ok: true, expires_in: tok.expires_in, token_len: tok.access_token.length });
+  } catch (e: any) {
     res.status(500).json({ ok: false, error: e.message ?? String(e) });
   }
 });
