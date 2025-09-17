@@ -121,7 +121,8 @@ export const msfProxy = onRequest(async (req, res) => {
         "x-api-key": MSF_X_API_KEY.value(),
         "Authorization": `Bearer ${token}`,
         "User-Agent": "SynergyForge/1.0",
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Accept-Language": "en-US,en;q=0.8"
       }
     });
 
@@ -135,6 +136,14 @@ export const msfProxy = onRequest(async (req, res) => {
     });
 
     const body = await upstream.text();
+    if (!upstream.ok) {
+      logger.error("msfProxy upstream error", {
+        path,
+        status: upstream.status,
+        statusText: upstream.statusText,
+        bodyStart: body.slice(0, 200),
+      });
+    }
     res.status(upstream.status);
     const ct = upstream.headers.get("content-type");
     if (ct) res.setHeader("Content-Type", ct);
@@ -162,10 +171,37 @@ export const syncGameRef = onRequest({ timeoutSeconds: 180 }, async (_req, res) 
       "Accept": "application/json"
     };
 
-    const [traits, characters] = await Promise.all([
-      fetchJSON("game/v1/traits", headers),
-      fetchJSON("game/v1/characters", headers),
-    ]);
+    // Traits are small; request with lang=none to minimize size
+    const traits = await fetchJSON("game/v1/traits?lang=none", headers);
+
+    // Characters require paging; use lang=none & traitFormat=id to minimize size
+    const perPage = 200;
+    let page = 1;
+    let allChars: any[] = [];
+    let perTotal = Infinity;
+    while (allChars.length < perTotal) {
+      const path = `game/v1/characters?lang=none&traitFormat=id&perPage=${perPage}&page=${page}`;
+      const resp: any = await fetchJSON(path, headers);
+      const items: any[] = Array.isArray(resp) ? resp : (resp.items ?? []);
+      // Normalize here to keep frontend lean and consistent
+      const normalized = items.map((c: any) => {
+        const out: any = {};
+        out.id = String(c.id ?? "");
+        out.name = c.name ?? "";
+        if (c.imageUrl) out.imageUrl = String(c.imageUrl);
+        out.traits = Array.isArray(c.traits) ? c.traits.map((t: any) => String(t)) : [];
+        if (c.faction) out.faction = String(c.faction);
+        if (c.role) out.role = String(c.role);
+        if (c.stats && typeof c.stats === "object") out.stats = c.stats;
+        return out;
+      });
+      allChars = allChars.concat(normalized);
+      const meta = resp?.meta ?? {};
+      perTotal = meta.perTotal ?? (items.length < perPage ? allChars.length : allChars.length + perPage);
+      if (items.length < perPage) break;
+      page += 1;
+      if (page > 200) break; // safety
+    }
 
     const bucket = getStorage().bucket();
     const db = getFirestore();
@@ -173,10 +209,10 @@ export const syncGameRef = onRequest({ timeoutSeconds: 180 }, async (_req, res) 
     await bucket.file("datasets/traits.json")
       .save(JSON.stringify(traits, null, 2), { contentType: "application/json" });
     await bucket.file("datasets/characters.json")
-      .save(JSON.stringify(characters, null, 2), { contentType: "application/json" });
+      .save(JSON.stringify({ items: allChars, meta: { perTotal: allChars.length, perPage, page } }, null, 2), { contentType: "application/json" });
 
     const traitsCount = Array.isArray(traits) ? traits.length : (traits.items?.length ?? 0);
-    const charsCount  = Array.isArray(characters) ? characters.length : (characters.items?.length ?? 0);
+    const charsCount  = allChars.length;
 
     await db.collection("meta").doc("datasets").set({
       updatedAt: Timestamp.now(),
@@ -206,6 +242,40 @@ export const tokenDebug = onRequest(async (_req, res) => {
     const tok = await getAppAccessToken();
     res.json({ ok: true, expires_in: tok.expires_in, token_len: tok.access_token.length });
   } catch (e: any) {
+    res.status(500).json({ ok: false, error: e.message ?? String(e) });
+  }
+});
+
+// Stream normalized datasets from Storage
+export const datasets = onRequest(async (req, res) => {
+  try {
+    // Accept either /datasets/:name or /datasets?name=...
+    const url = new URL(req.url, "http://localhost");
+    const pathname = url.pathname || "";
+    const m = pathname.match(/\/datasets\/([^/]+)/);
+    const raw = (m?.[1] || String(req.query.name || "")).toLowerCase();
+    const name = raw.replace(/\.(json)?$/, "");
+    logger.info("datasets request", { pathname, name });
+    if (!name || !(name === "traits" || name === "characters")) {
+      res.status(400).json({ ok: false, error: "name must be traits or characters" });
+      return;
+    }
+    const filePath = `datasets/${name}.json`;
+    const bucket = getStorage().bucket();
+    const bucketName = (bucket as any).name || "<unknown>";
+    const file = bucket.file(filePath);
+    const [exists] = await file.exists();
+    logger.info("datasets locate", { bucket: bucketName, filePath, exists });
+    if (!exists) {
+      res.status(404).json({ ok: false, error: `Not found: gs://${bucketName}/${filePath}` });
+      return;
+    }
+    const [buf] = await file.download();
+    res.setHeader("Content-Type", "application/json");
+    res.setHeader("Cache-Control", "public, max-age=300");
+    res.status(200).send(buf);
+  } catch (e: any) {
+    logger.error("datasets error", e);
     res.status(500).json({ ok: false, error: e.message ?? String(e) });
   }
 });

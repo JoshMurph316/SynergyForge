@@ -13,6 +13,7 @@ export default defineConfig({
           if (p === "/api/oauth/client") return "/oauthClientCreds";
           if (p === "/api/whoami") return "/whoami";
           if (p === "/api/tokenDebug") return "/tokenDebug";
+          if (p.startsWith("/api/datasets")) return p.replace(/^\/api\/datasets/, "/datasets");
           if (p.startsWith("/api/msf")) return p.replace(/^\/api\/msf/, "/msfProxy");
           if (p === "/api/sync") return "/syncGameRef";
           return p;
